@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutGrid,
@@ -31,9 +32,26 @@ const navItems2 = [
 export default function Sidebar({ onClose }) {
   const navigate = useNavigate();
   const { theme, toggleTheme, isSwitching } = useTheme();
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+
+  useEffect(() => {
+    const onPointerDown = (event) => {
+      if (!profileMenuRef.current?.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("touchstart", onPointerDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("touchstart", onPointerDown);
+    };
+  }, []);
 
   return (
-    <aside className="sidebar-shell relative w-[330px] max-w-full h-dvh lg:h-full min-h-0 lg:min-h-full flex flex-col overflow-y-auto">
+    <aside className="sidebar-shell relative w-[330px] max-w-full h-dvh lg:h-full min-h-0 lg:min-h-full flex flex-col overflow-y-hidden overflow-x-hidden">
       <div className="lg:hidden shrink-0 flex items-center justify-between px-6 pt-6">
         <BrandLogo />
         <button
@@ -47,7 +65,7 @@ export default function Sidebar({ onClose }) {
       </div>
 
       {/* Top Section */}
-      <div className="flex-1 min-h-0 pb-5">
+      <div className="flex-1 min-h-0 pb-5 overflow-y-auto no-scrollbar">
         {/* Navigation */}
         <nav className="mt-8 lg:mt-[128px] px-6 lg:px-8 space-y-2" aria-label="Primary navigation">
           {navItems.map((item) => {
@@ -139,11 +157,17 @@ export default function Sidebar({ onClose }) {
 
         {/* Bottom Profile */}
         <div className="px-6 lg:px-7 py-6 border-t border-[var(--shell-border)]">
-          <div className="relative group/profile">
+          <div
+            ref={profileMenuRef}
+            className="relative"
+          >
             <button
               type="button"
+              onClick={() => setProfileMenuOpen((prev) => !prev)}
               className="w-full group rounded-xl px-2 py-2 text-left transition-colors hover:bg-[var(--shell-muted-btn-bg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--shell-accent)]"
               aria-label="Open profile actions"
+              aria-expanded={profileMenuOpen}
+              aria-haspopup="menu"
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#f3d047] flex items-center justify-center text-[#1f2937] font-semibold text-base">
@@ -164,16 +188,24 @@ export default function Sidebar({ onClose }) {
               </div>
             </button>
 
-            <div className="pointer-events-none absolute left-0 right-0 bottom-[calc(100%+8px)] z-50 w-full rounded-xl border border-[var(--shell-border)] bg-[var(--shell-surface)] p-1 opacity-0 shadow-[0_10px_28px_rgba(12,17,29,0.2)] transition-all duration-200 group-hover/profile:pointer-events-auto group-hover/profile:opacity-100 group-focus-within/profile:pointer-events-auto group-focus-within/profile:opacity-100 lg:left-full lg:right-auto lg:top-1/2 lg:bottom-auto lg:ml-2 lg:w-40 lg:-translate-y-1/2">
+            <div
+              className={`absolute left-0 right-0 bottom-[calc(100%+8px)] z-50 w-full rounded-xl border border-[var(--shell-border)] bg-[var(--shell-surface)] p-1 shadow-[0_10px_28px_rgba(12,17,29,0.2)] transition-all duration-200 ${
+                profileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+              }`}
+              role="menu"
+              aria-label="Profile actions"
+            >
               <button
                 type="button"
                 onClick={() => {
                   sessionStorage.removeItem("dashboard_entry_loader");
+                  setProfileMenuOpen(false);
                   onClose?.();
                   navigate("/login");
                 }}
                 className="w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-[var(--shell-text-secondary)] transition-colors hover:bg-[#fce9e7] hover:text-[#d9574b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d9574b]/40"
                 aria-label="Logout"
+                role="menuitem"
               >
                 Logout
               </button>

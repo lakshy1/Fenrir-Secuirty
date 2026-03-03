@@ -124,6 +124,8 @@ export default function ScanDetail() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("activity");
   const [scanStopped, setScanStopped] = useState(false);
+  const [scanProgress, setScanProgress] = useState(41);
+  const [runtimeSeconds, setRuntimeSeconds] = useState(9 * 60 + 12);
   const [toast, setToast] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -132,6 +134,26 @@ export default function ScanDetail() {
     return () => window.clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (scanStopped) {
+      return;
+    }
+
+    let tick = 0;
+    const timer = window.setInterval(() => {
+      tick += 1;
+      setRuntimeSeconds((prev) => prev + 1);
+      setScanProgress((prev) => {
+        if (prev >= 99) {
+          return prev;
+        }
+        return tick % 4 === 0 ? Math.min(99, prev + 1) : prev;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [scanStopped]);
+
   const showToast = (message) => {
     setToast(message);
     window.clearTimeout(showToast.timeoutId);
@@ -139,6 +161,7 @@ export default function ScanDetail() {
   };
 
   const currentLog = activeTab === "activity" ? activityLog : verificationLoops;
+  const runtimeLabel = new Date(runtimeSeconds * 1000).toISOString().substring(11, 19);
 
   return (
     <AppLayout
@@ -147,8 +170,11 @@ export default function ScanDetail() {
           dangerAction={scanStopped ? "Start Scan" : "Stop Scan"}
           onPrimaryAction={() => showToast("Report exported as PDF")}
           onDangerAction={() => {
-            setScanStopped((prev) => !prev);
-            showToast(scanStopped ? "Scan started" : "Scan stopped");
+            setScanStopped((prev) => {
+              const next = !prev;
+              showToast(next ? "Scan stopped" : "Scan started");
+              return next;
+            });
           }}
         />
       }
@@ -158,7 +184,9 @@ export default function ScanDetail() {
           <div className="flex flex-col lg:flex-row items-stretch lg:items-start gap-5 sm:gap-6">
             <div className="w-full lg:w-[150px] shrink-0 flex items-center justify-center my-auto py-3 sm:py-4 border-b lg:border-b-0 lg:border-r border-[var(--shell-border)]">
               <div className="scan-progress-circle h-[104px] w-[104px] sm:h-[130px] sm:w-[130px] rounded-full flex flex-col items-center justify-center text-center">
-                <p className="text-[34px] sm:text-[42px] font-semibold leading-none">{scanStopped ? "0%" : "41%"}</p>
+                <p className="text-[34px] sm:text-[42px] font-semibold leading-none">
+                  {scanProgress}%
+                </p>
                 <p className="text-[12px] sm:text-[14px] mt-1">{scanStopped ? "Stopped" : "InProgress"}</p>
               </div>
             </div>
@@ -213,7 +241,7 @@ export default function ScanDetail() {
               <h3 className="text-[15px] sm:text-[19px] font-semibold truncate">Live Scan Console</h3>
               <span className="scan-running-pill h-7 sm:h-8 px-3 sm:px-4 rounded-full text-[12px] sm:text-[15px] inline-flex items-center gap-1 sm:gap-2 shrink-0">
                 <Clock3 size={11} className="sm:h-[14px] sm:w-[14px]" />
-                {scanStopped ? "Stopped" : "Running..."}
+                {scanStopped ? `Stopped at ${runtimeLabel}` : `Running ${runtimeLabel}`}
               </span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2 text-[var(--shell-text-secondary)]">
