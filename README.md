@@ -1,6 +1,6 @@
 # Fenrir Security UI
 
-A frontend demo for a cybersecurity scanning workflow built with React + Vite.
+A frontend demo for a cybersecurity scanning workflow built with React + Vite + TailwindCSS.
 
 It includes:
 - Signup and Login screens
