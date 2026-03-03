@@ -28,7 +28,7 @@ const severitySummary = [
   {
     label: "Critical Severity",
     value: 86,
-    change: "+2% increase than yesterday",
+    change: "+2% increase vs yesterday",
     tone: "up",
     icon: CircleSlash2,
     iconWrap: "bg-[#f0dce9]",
@@ -37,7 +37,7 @@ const severitySummary = [
   {
     label: "High Severity",
     value: 16,
-    change: "+0.9% increase than yesterday",
+    change: "+0.9% increase vs yesterday",
     tone: "up",
     icon: TriangleAlert,
     iconWrap: "bg-[#f2e1cf]",
@@ -46,7 +46,7 @@ const severitySummary = [
   {
     label: "Medium Severity",
     value: 26,
-    change: "+0.9% decrease than yesterday",
+    change: "+0.9% decrease vs yesterday",
     tone: "down",
     icon: AlertTriangle,
     iconWrap: "bg-[#ece8d8]",
@@ -55,7 +55,7 @@ const severitySummary = [
   {
     label: "Low Severity",
     value: 16,
-    change: "+0.9% increase than yesterday",
+    change: "+0.9% increase vs yesterday",
     tone: "up",
     icon: SearchCheck,
     iconWrap: "bg-[#dbe2f4]",
@@ -211,7 +211,7 @@ export default function Dashboard() {
         </section>
 
         <section
-          className="dashboard-severity-row grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6 px-4 sm:px-6 lg:px-7 py-3 sm:py-4"
+          className="dashboard-severity-row grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 lg:gap-6 xl:gap-6 px-4 sm:px-6 lg:px-6 xl:px-5 py-3 sm:py-4"
           aria-live="polite"
           aria-busy={isLoading}
         >
@@ -221,7 +221,10 @@ export default function Dashboard() {
                 const Icon = item.icon;
                 const TrendIcon = item.tone === "down" ? ArrowDown : ArrowUp;
                 return (
-                  <article key={item.label} className="dashboard-severity-card min-w-0 card-fade-up">
+                  <article
+                    key={item.label}
+                    className="dashboard-severity-card min-w-0 card-fade-up rounded-2xl px-5 py-4"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-[16px] lg:text-[17px] leading-tight font-semibold">{item.label}</h3>
                       <span
@@ -231,12 +234,12 @@ export default function Dashboard() {
                         <Icon size={20} className={item.iconColor} />
                       </span>
                     </div>
-                    <div className="flex items-end gap-2 lg:gap-2.5 flex-nowrap min-w-0">
-                      <p className="text-[34px] lg:text-[38px] leading-none font-semibold tracking-[-0.01em]">
+                    <div className="flex items-end justify-between gap-2 lg:gap-2.5 min-w-0">
+                      <p className="text-[34px] lg:text-[36px] xl:text-[34px] leading-none font-semibold tracking-[-0.01em]">
                         {item.value}
                       </p>
                       <p
-                        className={`pb-1 text-[11px] lg:text-[12px] leading-none flex items-center whitespace-nowrap ${
+                        className={`pb-1 text-[11px] lg:text-[11px] xl:text-[10px] leading-[1.2] flex items-center justify-end text-right whitespace-nowrap ${
                           item.tone === "down" ? "text-[#3d7a57]" : "text-[#b92f69]"
                         }`}
                       >
@@ -474,8 +477,8 @@ function MetaItem({ label, value, noDivider = false }) {
 
 function SeveritySkeleton() {
   return (
-    <div className="dashboard-severity-card min-w-0 card-fade-up">
-      <div className="flex items-center justify-between mb-3">
+    <div className="dashboard-severity-card min-w-0 card-fade-up rounded-2xl px-5 py-4">
+      <div className="inline-flex items-center gap-3 mb-3">
         <SkeletonBlock className="h-5 w-40" />
         <SkeletonBlock className="h-10 w-10 rounded-xl" />
       </div>
