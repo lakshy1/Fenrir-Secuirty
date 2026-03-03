@@ -28,14 +28,14 @@ Open: `http://localhost:5173`
 
 ## Project Structure (quick view)
 
-
+```
 src/
   app/            # routes
   components/     # layout + reusable UI
   context/        # theme context
   data/           # mock scan data
   pages/          # Signup, Login, Dashboard, ScanDetail
-
+```
 
 ## Notes
 
