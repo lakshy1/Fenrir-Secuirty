@@ -33,8 +33,8 @@ export default function Sidebar({ onClose }) {
   const { theme, toggleTheme, isSwitching } = useTheme();
 
   return (
-    <aside className="sidebar-shell relative w-[330px] h-full min-h-screen lg:min-h-full flex flex-col justify-between">
-      <div className="lg:hidden flex items-center justify-between px-6 pt-6">
+    <aside className="sidebar-shell relative w-[330px] max-w-full h-dvh lg:h-full min-h-0 lg:min-h-full flex flex-col overflow-y-auto">
+      <div className="lg:hidden shrink-0 flex items-center justify-between px-6 pt-6">
         <BrandLogo />
         <button
           type="button"
@@ -47,9 +47,9 @@ export default function Sidebar({ onClose }) {
       </div>
 
       {/* Top Section */}
-      <div>
+      <div className="flex-1 min-h-0 pb-5">
         {/* Navigation */}
-        <nav className="mt-8 lg:mt-[128px] px-8 space-y-2" aria-label="Primary navigation">
+        <nav className="mt-8 lg:mt-[128px] px-6 lg:px-8 space-y-2" aria-label="Primary navigation">
           {navItems.map((item) => {
             const Icon = item.icon;
 
@@ -83,9 +83,9 @@ export default function Sidebar({ onClose }) {
         </nav>
 
         {/* Divider */}
-        <div className="border-t border-[var(--shell-border)] my-8" />
+        <div className="border-t border-[var(--shell-border)] my-7 lg:my-8 mx-6 lg:mx-8" />
 
-        <nav className="px-8 space-y-2" aria-label="Secondary navigation">
+        <nav className="px-6 lg:px-8 space-y-2" aria-label="Secondary navigation">
           {navItems2.map((item) => {
             const Icon = item.icon;
 
@@ -119,8 +119,8 @@ export default function Sidebar({ onClose }) {
         </nav>
       </div>
 
-      <div>
-        <div className="px-7 pb-3">
+      <div className="mt-auto shrink-0">
+        <div className="px-6 lg:px-7 pb-3">
           <button
             type="button"
             onClick={toggleTheme}
@@ -138,7 +138,7 @@ export default function Sidebar({ onClose }) {
         </div>
 
         {/* Bottom Profile */}
-        <div className="px-7 py-6 border-t border-[var(--shell-border)]">
+        <div className="px-6 lg:px-7 py-6 border-t border-[var(--shell-border)]">
           <div className="relative group/profile">
             <button
               type="button"
@@ -164,7 +164,7 @@ export default function Sidebar({ onClose }) {
               </div>
             </button>
 
-            <div className="pointer-events-none absolute left-full top-1/2 z-50 ml-2 w-40 -translate-y-1/2 rounded-xl border border-[var(--shell-border)] bg-[var(--shell-surface)] p-1 opacity-0 shadow-[0_10px_28px_rgba(12,17,29,0.2)] transition-all duration-200 group-hover/profile:pointer-events-auto group-hover/profile:opacity-100 group-focus-within/profile:pointer-events-auto group-focus-within/profile:opacity-100">
+            <div className="pointer-events-none absolute left-0 right-0 bottom-[calc(100%+8px)] z-50 w-full rounded-xl border border-[var(--shell-border)] bg-[var(--shell-surface)] p-1 opacity-0 shadow-[0_10px_28px_rgba(12,17,29,0.2)] transition-all duration-200 group-hover/profile:pointer-events-auto group-hover/profile:opacity-100 group-focus-within/profile:pointer-events-auto group-focus-within/profile:opacity-100 lg:left-full lg:right-auto lg:top-1/2 lg:bottom-auto lg:ml-2 lg:w-40 lg:-translate-y-1/2">
               <button
                 type="button"
                 onClick={() => {
